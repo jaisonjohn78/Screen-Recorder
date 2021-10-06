@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen Recorder</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  </head>
+  <body align="center">
+      <h2>Refresh To<br/> Start again</h2>
+      <h1>Click here <br/>to download</h1>
+    <video width="700" height="400" controls></video>
+    <img class="download" src="download_arrow.png">
+    <img class="refresh" src="refresh_arrow.png">
+
+
+    <script>
+      const start = async() => {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            MediaSource: "screen",
+          },
+        });
+
+        const data = [];
+
+        const mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => {
+          data.push(e.data);
+        };
+        mediaRecorder.start();
+        mediaRecorder.onstop = (e) => {
+          document.querySelector("video").src = URL.createObjectURL(
+            new Blob(data, {
+              type: data[0].type,
+            })
+          );
+        };
+      };
+
+      start();
+    </script>
+  </body>
+</html>
